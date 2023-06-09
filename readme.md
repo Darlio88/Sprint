@@ -92,6 +92,6 @@ There are no additional dependencies required for this project beyond what is me
 
 ## Conclusion
 
-Thank you for considering this project for the Sprint Uganda take-home challenge. If you have any questions or need further assistance, please don't hesitate to reach out. Good luck with the test, and I hope you find the right candidate for the software development role.
+Thank you for considering this project for the Sprint Uganda take-home challenge. If you have any questions or need need more information, please don't hesitate to reach out. Good luck with the screening, and I hope you find me the right candidate for the software development role.
 
 [Omoding Daniel]: https://github.com/Darlio88
