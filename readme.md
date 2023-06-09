@@ -47,7 +47,7 @@ To set up and run the application, you will need the following:
    - Create a `.env` file in the `backend` directory.
    - Add the following line to the `.env` file:
      ```
-     MONGODB_URI=your-mongodb-uri
+     MONGO_DB_URI=your-mongodb-uri
      ```
      Replace `your-mongodb-uri` with the connection string for your MongoDB database.
 
@@ -87,8 +87,8 @@ There are no additional dependencies required for this project beyond what is me
 
 ## Adding Additional Features or Improvements
 
-- I added more restaurant features ran initially specified
-
+- I added more restaurant features than initially specified
+- I added user authentication to enable only our platform users to add restaurants
 
 ## Conclusion
 
