@@ -1,0 +1,25 @@
+
+section.restaurants-container{
+    max-width: 1280px;
+    display: grid;
+}
+.restaurants-container >div{
+    display: grid;
+    gap:1rem;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+@media screen and (min-width:640px){
+    .restaurants-container >div{
+        grid-template-columns: repeat(2,1fr);
+    }
+}
+
+
+@media screen and (min-width:1024px){
+    .restaurants-container >div{
+        grid-template-columns: repeat(4,1fr);
+    }
+}

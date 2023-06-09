@@ -1,0 +1,38 @@
+.form-container{
+    display:grid;
+    /* place-items: center; */
+    /* padding:20%; */
+}
+
+.form-container form{
+  display:grid;
+  gap:2rem;
+  width:min(80%, 400px);
+  margin-left: auto;
+  margin-right:auto;
+  color:var(--armygreen);
+}
+
+.form-container form > div{
+    display:grid;
+    gap:0.5rem; 
+}
+
+form label{
+    font-size: 1.1rem;
+    font-weight:500;
+}
+
+
+form input{
+    border-radius: 0.25rem;
+    padding:0.3rem 0.5rem;
+    background-color: var(--lightgreen);
+    border:1px solid var(--armygreen);
+    color:var(--armygreen);
+    outline:transparent;
+    
+}
+input::placeholder{
+    color:var(--armygreen);
+}

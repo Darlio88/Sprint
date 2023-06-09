@@ -1,0 +1,94 @@
+
+.restaurant-card{
+    display:grid;
+    cursor: pointer;
+    gap:0.25rem;
+    width:16rem;
+    padding:0.5rem;
+    border-radius: 0.8rem;
+    box-shadow: -4px 4px 25px -12px var(--clay);
+    -webkit-box-shadow: -4px 4px 25px -12px var(--clay);
+    -moz-box-shadow: -4px 4px 25px -12px var(--clay);
+    transition: all 0.25s ease-in-out;
+}
+
+.restaurant-card:hover{
+    transform: scale(1.05);
+}
+.restaurant-card .restaurant-image{
+    border-radius: 0.8rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.restaurant-image .location-info{
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+    position: absolute;
+    top:2%;
+    right:2%;
+    left:2%;
+    padding:0.25rem;
+    background-color: var(--light);
+    border-radius: 0.4rem;
+    color:var(--armygreen);
+}
+
+.location-info .restaurant-location{
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+ 
+.restaurant-card .restaurant-info{
+    display:grid;
+    gap:0.5rem;
+}
+
+.restaurant-info .restaurant-name{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.restaurant-info >span{
+    color:var(--blue);
+}
+.restaurant-card h4{
+    all:unset;
+    font-weight:600;
+    
+}
+
+.restaurant-card .rating{
+    display:flex;
+    gap:0.1rem;
+    align-items: center;
+    font-weight: 300;
+    opacity: 0.9;
+}
+
+.restaurant-card .icon-area{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap:0.4rem;
+}
+
+.icon-area .meal{
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+    gap:.25rem;
+    padding: .1rem .3rem;
+    color:var(--darkgreen);
+    background:var(--lightgreen);
+    border-radius: 0.4rem;
+}
+
+.meal span{
+    font-size: 0.8rem;
+}

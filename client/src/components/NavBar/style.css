@@ -1,0 +1,50 @@
+
+nav.container{
+    /* max-width: 1280px; */
+    display:grid;
+    margin-left: auto;
+    margin-right: auto;
+    position: sticky;
+    top:0;
+    right:0;
+    z-index:1;
+    color:var(--lightgreen);
+    background-color: var(--darkgreen);
+}
+nav h2{
+    /* all:unset; */
+}
+nav.container > div{
+    /* gap:2rem; */
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    margin:0.35rem 0.35rem;
+    max-width:999px;
+    width:80%;
+}
+
+@media screen and (min-width:1024px) {
+    nav.container > div{
+        margin:0.35rem auto;
+    } 
+
+}
+
+
+
+nav.container .logo span{
+    font-size: clamp(1.2rem, 2rem);
+    color:var(--armygreen);
+}
+
+
+nav .profile-area {
+    width:3rem;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    border:2px solid var(--lightgreen);
+}
