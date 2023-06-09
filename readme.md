@@ -90,6 +90,11 @@ There are no additional dependencies required for this project beyond what is me
 - I added more restaurant features than initially specified
 - I added user authentication to enable only our platform users to add restaurants
 
+## Screenshots
+![screenshot-one](https://ik.imagekit.io/daniels3bucket/sprintug/Screenshot__431_.png?updatedAt=1686310722405)
+![screenshot-two](https://ik.imagekit.io/daniels3bucket/sprintug/Screenshot__425_.png?updatedAt=1686310722400)
+![screenshot-three](https://ik.imagekit.io/daniels3bucket/sprintug/Screenshot__432_.png?updatedAt=1686310722376)
+
 ## Conclusion
 
 Thank you for considering this project for the Sprint Uganda take-home challenge. If you have any questions or need need more information, please don't hesitate to reach out. Good luck with the screening, and I hope you find me the right candidate for the software development role.
