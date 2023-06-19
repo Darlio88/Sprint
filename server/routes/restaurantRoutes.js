@@ -1,22 +1,30 @@
-import { Router } from "express";
-
+const { Router } = require("express");
+const multer= require("multer");
+const sharp= require("sharp");
 //controllers
-import {getAllRestaurants,createRestaurant,deleteRestaurant, updateRestaurant,getOneRestaurant} from "../controllers/restaurantControllers.js"
+const {getAllRestaurants,
+    createRestaurant,
+    deleteRestaurant,
+     updateRestaurant,
+     getOneRestaurant} = require("../controllers/restaurantControllers.js")
 
 const route = Router()
 
+const upload= multer({
+
+})
 //all restaurants
 route.get("/",getAllRestaurants)
 
 //get one
 route.get("/:id",getOneRestaurant)
 //create a new restaurant
-route.post("/create",createRestaurant)
+route.post("/create",upload.single("image"),createRestaurant)
 
 //delete a restaurant
 route.delete("/:id",deleteRestaurant)
 
 //update a restaurant
-route.patch("/:id",updateRestaurant)
+route.patch("/:id",upload.single("image"),updateRestaurant)
 
-export default route
+module.exports= route

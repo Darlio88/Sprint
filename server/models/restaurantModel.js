@@ -1,7 +1,8 @@
-import mongoose from "mongoose"
+const mongoose = require("mongoose")
+
 
 //user model
-import { Users } from "./userModel.js"
+const { Users } = require("./userModel.js")
 
 const foodSchema= new mongoose.Schema({
     Break:Number,
@@ -12,7 +13,6 @@ const foodSchema= new mongoose.Schema({
 
 const restaurantSchema = new mongoose.Schema({
     Name: String,
-    ImageStr:String,
     ImageLocation:String,
     CreatedBy:{
     type:mongoose.Schema.Types.ObjectId,
@@ -26,11 +26,12 @@ const restaurantSchema = new mongoose.Schema({
     Location:String,
     Cuisine:String,
     AvgPrice:String,
-    Meals:{
-        type:foodSchema,
+    Likes:{
+        type:[String]
     }
-
 })
 
-
-export const Restaurant= mongoose.model("Restaurants", restaurantSchema);
+ const Restaurant= mongoose.model("Restaurants", restaurantSchema);
+ module.exports={
+    Restaurant
+ }

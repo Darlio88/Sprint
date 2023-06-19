@@ -1,56 +1,59 @@
-import { Restaurant } from "../models/restaurantModel.js";
-import {nanoid} from "nanoid"
+const { Restaurant } = require("../models/restaurantModel.js")
+const multer= require("multer");
+const sharp= require("sharp");
+const fs= require("fs");
 
-import fs from "fs"
 
-
-export const getAllRestaurants = async(req, res)=>{
+const getAllRestaurants = async(req, res)=>{
     try {
-         const restaurants = await Restaurant.find({})
-        //  const restaurantsWithImageStr= restaurants.map((restaurant)=>{
-        //     const homedir=process.cwd();
-        //     const ImagePath= `${homedir}/images/${restaurant.ImageLocation}.png`
-        //     const imageBuffer = fs.readFileSync(ImagePath);
-        //     // Convert Buffer to base64 encoded string
-        //     const base64Image = imageBuffer.toString('base64');
-        //     //  restaurant["ImageStr"]=base64Image;
-        //      const {CreatedBy,id:_id,Meals,Location, Name,AvgPrice}= restaurant;
-        //     return {CreatedBy,id:_id,Meals,Location,AvgPrice, Name,ImageStr:base64Image};
-        //  })
-         res.status(200).send(restaurants)
-        
-        //  res.status(200).json(restaurantsWithImageStr)       
+         await Restaurant.find({}).then(restaurants=>{
+            const withImageStr= restaurants.map(restaurant=>{
+               const {Name, Location,Cuisine, AvgPrice,ImageLocation,CreatedBy,_id}= restaurant
+               // Read the image file as a buffer
+               console.log(Name, Location,Cuisine, AvgPrice,ImageLocation,CreatedBy,_id)
+                const imageBuffer = fs.readFileSync(ImageLocation);
+                // Convert the image buffer to a Base64 string
+                const base64Image = imageBuffer.toString('base64');
+               return ({
+                 Name,Location,Cuisine,AvgPrice,CreatedBy,_id,ImageStr:base64Image
+               })
+            })
+            res.status(200).send(withImageStr) 
+         })
+             
     } catch (error) {
         res.status(500).json("Server error")
     }
 }
 
-export const createRestaurant = async(req, res)=>{
+ const createRestaurant = async(req, res)=>{
     try {
+        const file=req.file
       //name, location, meals, cuisine, avgprice,image_location, 
-      console.log(req.body)   
-      const {Name, Location,Meals, Cuisine, AvgPrice,ImageStr,CreatedBy}= req.body;
-    //   console.log(Name, Location,Meals, Cuisine, AvgPrice,ImageStr,CreatedBy)
-      
-      //convert base64 to image
-      //save it to file system
-      //save image_location to database
-      const imageBuffer = Buffer.from(ImageStr.slice(21), 'base64');
-      const uniqueStr= nanoid()
-      fs.writeFile(`./images/${uniqueStr}.png`, imageBuffer, async function(err) {
-        if (err) throw err;
-        console.log('Image saved successfully', );
-        let newRestaurant = new Restaurant({Name,ImageLocation:uniqueStr,ImageStr,Location,AvgPrice,Cuisine,CreatedBy,Meals})    
-        await newRestaurant.save()
-        res.status(200).json("Restaurant Successfully created")
-      });
-      
+      console.log(req.body) 
+      console.log(file) 
+      const image = sharp(file.buffer);
+      const filePath= `./images/${Date.now().toString()+file.originalname}`
+      // Apply image manipulations
+      image.resize(800, 600).toFile(filePath, (err, info) => {
+               if (err) {
+                   console.error(err);
+               } else {
+                   console.log('Image processing complete');
+               }
+           });
+      const {Name, Location, Cuisine, AvgPrice,CreatedBy}= req.body;
+      console.log(Name, Location, Cuisine, AvgPrice,CreatedBy)
+    await Restaurant.create({Name, Location,Cuisine, AvgPrice,ImageLocation:filePath,CreatedBy}).then(()=>{
+       
+        res.status(201).send("restaurant successfully created")
+    })
     } catch (error) {
         res.status(501).json("failed to create user")
     }
 }
 
-export const deleteRestaurant= async(req, res)=>{
+ const deleteRestaurant= async(req, res)=>{
     try {
        const {id} = req.params;
        console.log(id, "deleting session")
@@ -64,19 +67,33 @@ export const deleteRestaurant= async(req, res)=>{
     }
 }
 
-export const  updateRestaurant = async(req, res)=>{
+ const  updateRestaurant = async(req, res)=>{
+    const {id} = req.params;  
+    const body=req.body;
+    const {Name, Location, Cuisine, AvgPrice,CreatedBy}= req.body;
     try {
-        const {id} = req.params;  
-        const {Name, Location,Meals, Cuisine, AvgPrice,ImageStr,CreatedBy}= req.body;
-        const imageBuffer = Buffer.from(ImageStr.slice(22), 'base64');
-        const uniqueStr= nanoid()
-        fs.writeFile(`./images/${uniqueStr}.png`, imageBuffer, async function(err) {
-          if (err) throw err;
-          console.log('Image saved successfully', );
-        const restaurant = await Restaurant.updateOne({_id:id},{Name,ImageStr,ImageLocation:uniqueStr,Location,AvgPrice,Cuisine,CreatedBy,Meals})
-           console.log(restaurant)
-          res.status(200).json("Restaurant Successfully Updated")
-        });
+        if(req.file){
+            const image = sharp(req.file.buffer);
+            const filePath= `./images/${Date.now().toString()+req.file.originalname}`
+            // Apply image manipulations
+            image.resize(800, 600).toFile(filePath, (err, info) => {
+                     if (err) {
+                         console.error(err);
+                     } else {
+                         console.log('Image processing complete');
+                     }
+                 });
+          await Restaurant.updateOne({_id:id},{...body,ImageLocation:filePath}).then(()=>{
+              return res.status(201).send("Restaurant successfully created")
+          }).catch(err=>{
+            console.log(err)
+          })
+        }  else{
+            const restaurant = await Restaurant.updateOne({_id:id},{...body})
+            console.log(restaurant)
+           res.status(201).json("Restaurant Successfully Updated")
+        }
+
     } catch (error) {
         res.status(200).json("Server Error")
     }
@@ -84,14 +101,28 @@ export const  updateRestaurant = async(req, res)=>{
 
 
 
-export const getOneRestaurant = async (req, res)=>{
+ const getOneRestaurant = async (req, res)=>{
     try {
        const {id}= req.params; 
        console.log(id)
        const restaurant= await Restaurant.findById(id)
        if(!restaurant) return res.status(401).json("Restaurant does not exist")
-       res.status(200).json(restaurant)
+       const {Name, Location,Cuisine, AvgPrice,ImageLocation,CreatedBy,_id}= restaurant
+       // Read the image file as a buffer
+        const imageBuffer = fs.readFileSync(ImageLocation);
+        // Convert the image buffer to a Base64 string
+        const base64Image = imageBuffer.toString('base64');
+       res.status(200).json({Name, Location,Cuisine, AvgPrice,ImageStr:`${base64Image}`,CreatedBy,_id})
     } catch (error) {
         res.status(500).json("server error")
     }
+}
+
+
+module.exports={
+    getAllRestaurants,
+    getOneRestaurant,
+    updateRestaurant,
+    deleteRestaurant,
+    createRestaurant
 }

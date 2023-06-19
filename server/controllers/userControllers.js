@@ -1,10 +1,11 @@
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken"
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken")
+const multer= require("multer");
 //user models
 
-import {Users} from "../models/userModel.js"
+const {Users} = require("../models/userModel.js")
 
-export const loginController= async (req, res)=>{
+ const loginController= async (req, res)=>{
     try {
         const {Email,Password}= req.body;
        
@@ -18,13 +19,13 @@ export const loginController= async (req, res)=>{
         const payload= {id:testUser._id, FullName:testUser.FullName}
         const secretKey="ILovePussyCats"
         const token = jwt.sign(payload,secretKey)
-        return res.status(200).json({token})
+        return res.status(201).json({token})
     } catch (error) {
         res.status(500).json("server error")
     }
 }
 
-export const signupController= async (req, res)=>{
+ const signupController= async (req, res)=>{
     try {
         const {Email,Password, FullName}= req.body;
         console.log(Email, Password, FullName)
@@ -44,3 +45,7 @@ export const signupController= async (req, res)=>{
     }
 }
 
+module.exports={
+    loginController,
+    signupController
+}

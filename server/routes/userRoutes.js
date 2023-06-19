@@ -1,7 +1,7 @@
-import { Router } from "express";
+const { Router } = require("express");
 
 //controller
-import { loginController,signupController } from "../controllers/userContollers.js";
+const { loginController,signupController } = require("../controllers/userControllers.js");
 
 const route= Router()
 
@@ -10,4 +10,4 @@ route.post("/signin",loginController)
 //login a user
 route.post("/signup",signupController)
 
-export default route;
+module.exports= route;
