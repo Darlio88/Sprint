@@ -11,28 +11,22 @@ import RestaurantImage from "../../assets/restaurant.jpg"
 function Index({type}) {
   const [name, setName]=useState("")
   const [location, setLocation]= useState("")
-  const [imgStr, setImgStr]=useState("")
+  const [image, setImage]= useState(null)
   const [cost, setCost]=useState(10)
   const [cuisine, setCuisine]=useState("")
-  const [foods, setFoods] = useState({meals:0,break:0,snacks:0})
-
+  const [imgStr, setImgStr] = useState("")
   
 
 
-  function handleFoodChange(e){
-    let foodName=e.target.name;
-    let foodValue=e.target.value;
-    console.log(foodName, foodValue)
-   setFoods(prev=>({...prev,[foodName]:foodValue}))
-  }
   function handleImageChange(e){
-     const image= e.target.files[0]
+     
+     setImage( e.target.files[0])
      const reader = new FileReader()
      reader.readAsDataURL(image)
      reader.onloadend=()=>{
       const base64Str=reader.result;
       setImgStr(base64Str)
-    }   
+    }      
   }
   async function handleSubmit(e){
     e.preventDefault()
@@ -46,38 +40,33 @@ function Index({type}) {
       alert("Please login to create a restaurant")
       return;
     }
-    console.log(decoded)
-    console.log({name,location,cost, cuisine,foods})
-    if([name,location,imgStr,cost,cuisine].some(item=>item.length==0)){
+
+    if([name,location,cost,cuisine].some(item=>item.length==0)){
       alert("All fields are required")
       return
     }
-    await axios.post("http://localhost:4000/restaurants/create",{
-      Name:name,
-      Location:location,
-      ImageStr:imgStr,
-      AvgPrice:cost,
-      Meals:{Lunch:foods.meals,Break:foods.break,Snacks:foods.snacks},
-      CreatedBy:decoded?.id,
-      Cuisine:cuisine
-    }).then(res=>{
+    let form = new FormData()
+    form.append("Name",name);
+    form.append("Location",location);
+    form.append("AvgPrice",cost);
+    form.append("CreatedBy",decoded?.id);
+    form.append("Cuisine",cuisine);
+    form.append("image",image)
+    await axios.post("http://localhost:4000/restaurants/create",form).then(res=>{
       console.log(res.data)
       setCost(10)
       setName("")
       setCuisine("")
       setLocation("")
-      setImgStr("")
-      setFoods({meals:0,break:0,snacks:0})
+      setImage(null)
       alert("Restaurant Successfully added")
     })
   }
-  useEffect(()=>{
-   console.log(imgStr)
-  },[imgStr])
+
   return (
     <section className='form-container'>
       
-       <form onSubmit={handleSubmit}>
+       <form onSubmit={handleSubmit} encType='multipart/form-data'>
        <h3 style={{justifySelf:"center"}} >Create Restaurant</h3>
       <div>
         <label htmlFor="name">Restaurant Name</label>
@@ -103,24 +92,6 @@ function Index({type}) {
         <label htmlFor="cuisine">Cuisine</label>
         <input type="text" placeholder='chinese' id="cuisine" value={cuisine} onChange={(e)=>setCuisine(e.target.value)}/>
       </div> 
-      <div className='meals-container'>
-        <h6>Meals Available</h6>
-        <div className='meals-categories'>
-            <div>
-              <label htmlFor="break">Break</label>
-              <input type="number" placeholder='2' id="break" name='break' onChange={e=>handleFoodChange(e)}/>
-            </div>
-            <div>
-              <label htmlFor="meals">Meals</label>
-              <input type="number" placeholder='2' id="meals" name="meals" onChange={e=>handleFoodChange(e)}/>
-            </div>
-            <div>
-              <label htmlFor="snacks">Snacks</label>
-              <input type="number" placeholder='2' id="snacks" name="snacks" onChange={e=>handleFoodChange(e)}/>
-            </div>
-        </div>
-      </div>
-
       <button>Add</button>
     </form>
     </section>

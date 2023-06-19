@@ -17,9 +17,7 @@ function Index({type}) {
   const [imgStr, setImgStr]=useState("")
   const [cost, setCost]=useState(0)
   const [cuisine, setCuisine]=useState("")
-  // const [foods, setFoods] = useState({meals:0,break:0,snacks:0})
-  const [foods, setFoods] = useState(null)
-
+  const [image, setImage]= useState(null)
   useEffect(()=>{
     async function getRestaurant(){
       await axios.get(`http://localhost:4000/restaurants/${id}`).then(res=>{
@@ -30,24 +28,17 @@ function Index({type}) {
       setCuisine(restaurantInfo.Cuisine)
       setLocation(restaurantInfo.Location)
       setImgStr(restaurantInfo.ImageStr)
-      setFoods((prev)=>({...prev,meals:parseInt(restaurantInfo.Meals.Lunch),snacks:restaurantInfo.Meals.Snacks,break:restaurantInfo.Meals.Break}))
-      
       })
     }
     getRestaurant()
   },[id])
 
 
-  function handleFoodChange(e){
-    let foodName=e.target.name;
-    let foodValue=e.target.value;
-    
-   setFoods(prev=>({...prev,[foodName]:foodValue}))
-  }
   function handleImageChange(e){
-     const image= e.target.files[0]
+     const img= e.target.files[0]
+     setImage(img)
      const reader = new FileReader()
-     reader.readAsDataURL(image)
+     reader.readAsDataURL(img)
      reader.onloadend=()=>{
       const base64Str=reader.result;
       setImgStr(base64Str)
@@ -69,25 +60,25 @@ function Index({type}) {
       alert("All fields are required")
       return
     }
-    await axios.patch(`http://localhost:4000/restaurants/${id}`,{
-      Name:name,
-      Location:location,
-      ImageStr:imgStr,
-      AvgPrice:cost,
-      Meals:{Lunch:foods.meals,Break:foods.break,Snacks:foods.snacks},
-      CreatedBy:decoded?.id,
-      Cuisine:cuisine
-    }).then(res=>{
+    let form = new FormData()
+    form.append("Name",name);
+    form.append("Location",location);
+    form.append("AvgPrice",cost);
+    form.append("CreatedBy",decoded?.id);
+    form.append("Cuisine",cuisine);
+    form.append("image",image)
+    await axios.patch(`http://localhost:4000/restaurants/${id}`,form).then(res=>{
       setCost(10)
       setName("")
       setCuisine("")
       setLocation("")
+      setImage(null)
       setImgStr("")
-      setFoods({meals:0,break:0,snacks:0})
       navigate("/")
     })
   }
   useEffect(()=>{
+    console.log(imgStr)
   },[imgStr])
   return (
     <section className='form-container'>
@@ -101,7 +92,7 @@ function Index({type}) {
       <div>
         <label htmlFor="image">Restaurant Photo</label>
         { imgStr.length>0?(<div >
-          <img src={imgStr} alt="restaurant-preview" />
+          <img src={"data:image/png;base64,"+imgStr} alt="restaurant-preview" />
         </div>):null
         }
         <input type="file"  id="image" onChange={e=>handleImageChange(e)} accept='.png'/>
@@ -118,25 +109,7 @@ function Index({type}) {
         <label htmlFor="cuisine">Cuisine</label>
         <input type="text" placeholder='chinese' id="cuisine" value={cuisine} onChange={(e)=>setCuisine(e.target.value)}/>
       </div> 
-      <div className='meals-container'>
-        <h6>Meals Available</h6>
-        <div className='meals-categories'>
-            <div>
-              <label htmlFor="break">Break</label>
-              <input type="number" placeholder='0' id="break" name='break' onChange={e=>handleFoodChange(e)}/>
-            </div>
-            <div>
-              <label htmlFor="meals">Meals</label>
-              <input type="number" placeholder='0' id="meals" name="meals" onChange={e=>handleFoodChange(e)}/>
-            </div>
-            <div>
-              <label htmlFor="snacks">Snacks</label>
-              <input type="number" placeholder='0' id="snacks" name="snacks" onChange={e=>handleFoodChange(e)}/>
-            </div>
-        </div>
-      </div>
-
-      <button>Update</button>
+        <button>Update</button>
     </form>
     </section>
   )

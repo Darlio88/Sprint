@@ -28,7 +28,7 @@ function Index({restaurant}) {
               </div>
               <BsHeart />
             </div>
-            <img src={restaurant.ImageStr} alt="" />
+            <img src={"data:image/png;base64,"+restaurant.ImageStr} alt="" />
         </div>
         <div className='restaurant-info'>
             <div className="restaurant-name">
@@ -42,15 +42,15 @@ function Index({restaurant}) {
             <div className='icon-area'>
               <div className="meal">
                 <BsCupHot />
-                <span>{restaurant.Meals?.Break} break</span>
+                <span>{restaurant.Meals?.Break || 4} break</span>
               </div>
               <div className="meal">
                 <MdOutlineFreeBreakfast />
-                <span>{restaurant.Meals?.Snacks} snacks</span>
+                <span>{restaurant.Meals?.Snacks || 5} snacks</span>
               </div>
               <div className="meal">
                 <IoFastFoodOutline />
-                <span>{restaurant.Meals?.Lunch} Lunch</span>
+                <span>{restaurant.Meals?.Lunch || 8} Lunch</span>
               </div>
             </div>
         </div>

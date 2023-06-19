@@ -40,7 +40,7 @@ function Index() {
     <section className="card">
             <div className="card-container">
                 <div className='card-image'>
-                    <img src={restaurantInfo?.ImageStr} alt="" />
+                    <img src={"data:image/png;base64,"+restaurantInfo?.ImageStr} alt="" />
                 </div>
                 <div className="card-info">
                     <h4>{restaurantInfo?.Name}</h4>
@@ -55,6 +55,9 @@ function Index() {
                 </div>
                 <div className="card-bottom">
                     <button>Book Now</button>
+                    <div>
+                  <p>{restaurantInfo?.Cuisine}{" "}cuisine</p>
+                </div>
                 </div>
             </div>
     </section>
