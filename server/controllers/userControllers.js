@@ -37,7 +37,7 @@ const {Users} = require("../models/userModel.js")
         const newUser = new Users({Email,Password:hashedPassword,FullName})
         await newUser.save()
         const payload= {id:newUser._id, FullName:newUser.FullName}
-        const secretKey="ILovePussyCats"
+        const secretKey="ILoveDogs"
         const token = jwt.sign(payload,secretKey)
         return res.status(200).json({token})
     } catch (error) {

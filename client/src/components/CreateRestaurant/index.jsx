@@ -1,6 +1,10 @@
 import React, {useState, useEffect} from 'react'
 import axios from "axios"
 import jwtDecode from "jwt-decode"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+// import 
 //styles
 import "./style.css"
 import { Link } from 'react-router-dom'
@@ -37,12 +41,12 @@ function Index({type}) {
     }
     const decoded=jwtDecode(token)
     if(!decoded.id){
-      alert("Please login to create a restaurant")
+      toast.error("Please login to create a restaurant")
       return;
     }
 
     if([name,location,cost,cuisine].some(item=>item.length==0)){
-      alert("All fields are required")
+      toast.error("All fields are required")
       return
     }
     let form = new FormData()
@@ -59,13 +63,16 @@ function Index({type}) {
       setCuisine("")
       setLocation("")
       setImage(null)
-      alert("Restaurant Successfully added")
+      toast.success("Restaurant Successfully added")
+    }).catch(err=>{
+      console.error(err)
+      toast.error("Failed to create restaurant")
     })
   }
 
   return (
     <section className='form-container'>
-      
+      <ToastContainer />
        <form onSubmit={handleSubmit} encType='multipart/form-data'>
        <h3 style={{justifySelf:"center"}} >Create Restaurant</h3>
       <div>

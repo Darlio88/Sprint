@@ -1,5 +1,6 @@
 const request= require("supertest")
 const mongoose = require("mongoose");
+const fs= require("fs")
 //models
 const {Users}= require("../models/userModel")
 const {Restaurant} = require("../models/restaurantModel")
@@ -8,10 +9,10 @@ const {Restaurant} = require("../models/restaurantModel")
 
 //server
 const app = require("../server")
-const decoder = require("../utils/jwtDecoder")
+const decodeToken = require("../utils/jwtDecoder")
 
-
-const PORT = process.env.PORT || 4500;
+let userId;
+const PORT = process.env.PORT || 8888;
 
 //before starting the tests
 beforeAll(()=>{
@@ -35,13 +36,15 @@ afterAll( async ()=>{
     await mongoose.connection.close()
 })
 
-let userId=""
   describe('User API Tests', () => {
     it('should create a new user', async () => {
       const user = { FullName: 'John Doe', Email: 'john@example.com', Password:"0785124779DAN*"};
       const response = await request(app).post('/users/signup').send(user);
       let regex=/[A-Za-z0-9]+/
-      userId=decoder(response.body.token)
+      let decoded=decodeToken(response.body.token,"ILoveDogs")
+      console.log("the decoded",decoded)
+      userId=decoded?.id;
+      console.log("the id is",userId)
       expect(response.status).toBe(200);
       expect(regex.test(response.body.token)).toEqual(regex.test("hghjhgf"));
     });
@@ -60,21 +63,23 @@ let userId=""
         expect(regex.test(response.body.token)).toEqual(regex.test("hghjhgf"));
       });
     
-    //   it('should create a new restaurant', async () => {
-    //     const restaurant = {Name:'Fresh Hot', AvgPrice:100,};
-    //     // let form = new FormData()
-    //     // form.append("Name","Fresh Hot");
-    //     // form.append("Location","Wandegeya");
-    //     // form.append("AvgPrice",100);
-    //     // form.append("CreatedBy",userId);
-    //     // form.append("Cuisine","American");
-
-    //     const filePath = "../images/digital-art.png"; 
-
+      it('should create a new restaurant', async () => {
+        
+        const filePath = `images/digital-art.png`;
+        
+        if (fs.existsSync(filePath)) {
+          console.log('File exists');
+        }  
+        const response = await request(app).post('/restaurants/create').field("Name","Fresh Hot").field("Location","Wandegeya").field("CreatedBy",userId).field("AvgPrice",100).field("Cuisine","American").attach("image",filePath);   
+        // expect(response.status).toBe(201);
+        console.log(response)
+        expect(response.body).toEqual("restaurant successfully created");
+      });
     
-    //     const response = await request(app).post('/restaurants/create').field("Name","Fresh Hot").field("Location","Wandegeya").field("CreatedBy",userId).field("AvgPrice",100).field("Cuisine","American").attach("image",filePath);        
-    //     expect(response.status).toBe(201);
-    //     expect(response.body).toEqual("restaurant successfully created");
-    //   });
-    
+
+
+      it("new restaurant should exist in the database", async ()=>{
+        const newRestaurant= await Restaurant.findOne({Name:"Fresh Hot"})
+        expect(newRestaurant).toBeTruthy()
+      })
 })

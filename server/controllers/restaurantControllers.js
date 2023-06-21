@@ -33,23 +33,20 @@ const getAllRestaurants = async(req, res)=>{
       console.log(req.body) 
       console.log(file) 
       const image = sharp(file.buffer);
-      const filePath= `./images/${Date.now().toString()+file.originalname}`
+      const filePath= `images/${Date.now().toString()+file.originalname}`
       // Apply image manipulations
-      image.resize(800, 600).toFile(filePath, (err, info) => {
-               if (err) {
-                   console.error(err);
-               } else {
-                   console.log('Image processing complete');
-               }
-           });
-      const {Name, Location, Cuisine, AvgPrice,CreatedBy}= req.body;
-      console.log(Name, Location, Cuisine, AvgPrice,CreatedBy)
-    await Restaurant.create({Name, Location,Cuisine, AvgPrice,ImageLocation:filePath,CreatedBy}).then(()=>{
-       
+      await image.resize(800, 600).toFile(filePath)
+        const {Name, Location, Cuisine, AvgPrice,CreatedBy}= req.body;
+        console.log(Name, Location, Cuisine, AvgPrice,CreatedBy, filePath)
+        const testRes={Name, Location,Cuisine, AvgPrice,ImageLocation:filePath,CreatedBy}
+        console.log(testRes)
+        const newRestaurant = new  Restaurant(testRes)
+        await newRestaurant.save()    
         res.status(201).send("restaurant successfully created")
-    })
+    
     } catch (error) {
-        res.status(501).json("failed to create user")
+        console.log(error)
+        res.status(501).json("failed to create restaurant")
     }
 }
 
@@ -95,6 +92,7 @@ const getAllRestaurants = async(req, res)=>{
         }
 
     } catch (error) {
+        console.log(error)
         res.status(200).json("Server Error")
     }
 }

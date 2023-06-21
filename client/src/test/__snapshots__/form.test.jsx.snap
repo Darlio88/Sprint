@@ -1,0 +1,64 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`form contains onsubmit function 1`] = `
+<section
+  className="form-container"
+>
+  <form
+    onSubmit={[Function]}
+  >
+    <h3
+      style={
+        {
+          "justifySelf": "center",
+        }
+      }
+    >
+      Log Into Your Account
+    </h3>
+    <div>
+      <label
+        htmlFor="email"
+      >
+        Email
+      </label>
+      <input
+        id="email"
+        onChange={[Function]}
+        placeholder="danielomoding173@gmail.com"
+        type="email"
+        value=""
+      />
+    </div>
+    <div>
+      <label
+        htmlFor="password"
+      >
+        Password
+      </label>
+      <input
+        id="password"
+        onChange={[Function]}
+        placeholder="Password"
+        type="password"
+        value=""
+      />
+    </div>
+    <div>
+      <button>
+        Login
+      </button>
+      <p>
+        Do not yet
+         have an account? 
+        <a
+          href="/signup"
+          onClick={[Function]}
+        >
+          click here
+        </a>
+      </p>
+    </div>
+  </form>
+</section>
+`;

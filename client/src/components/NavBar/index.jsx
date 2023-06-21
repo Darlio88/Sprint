@@ -36,10 +36,14 @@ function Index() {
   function AddRestaurant(){
     navigate("/create-restaurant")
   }
+
+  function navigateHome(){
+    navigate("/")
+  }
   return (
-      <nav className="container">
-       <div className="inner" >
-        <h2 className="logo">Spr<span>i</span>nt</h2>
+      <nav className="container" role="navigation">
+       <div className="inner" role="list" >
+        <h2 className="logo" onClick={navigateHome}>Spr<span>i</span>nt</h2>
         {/* <div className="profile-area">
             <img src={profile} alt="profile" />
         </div> */}

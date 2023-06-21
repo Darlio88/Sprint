@@ -38,7 +38,9 @@ nav.container .logo span{
     color:var(--armygreen);
 }
 
-
+.logo{
+    cursor: pointer;
+}
 nav .profile-area {
     width:3rem;
     aspect-ratio: 1/1;

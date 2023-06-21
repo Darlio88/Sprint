@@ -1,6 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import axios from "axios"
 import jwtDecode from "jwt-decode"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { useParams, useNavigate } from 'react-router-dom'
 //styles
 
@@ -27,7 +30,7 @@ function Index({type}) {
       setName(restaurantInfo.Name)
       setCuisine(restaurantInfo.Cuisine)
       setLocation(restaurantInfo.Location)
-      setImgStr(restaurantInfo.ImageStr)
+      setImgStr("data:image/png;base64,"+restaurantInfo.ImageStr)
       })
     }
     getRestaurant()
@@ -48,16 +51,16 @@ function Index({type}) {
     e.preventDefault()
     const token = localStorage.getItem("token")
     if(!token){
-      alert("Please login to create a restaurant")
+      toast.error("Please login to create a restaurant")
       return;
     }
     const decoded=jwtDecode(token)
     if(!decoded.id){
-      alert("Please login to create a restaurant")
+      toast.error("Please login to create a restaurant")
       return;
     }
     if([name,location,imgStr,cost,cuisine].some(item=>item.length==0)){
-      alert("All fields are required")
+      toast.error("All fields are required")
       return
     }
     let form = new FormData()
@@ -74,7 +77,12 @@ function Index({type}) {
       setLocation("")
       setImage(null)
       setImgStr("")
+      toast.success("Restaurant successfully updated")
       navigate("/")
+  
+    }).catch(err=>{
+      console.error(err)
+      toast.error("Failed to update restaurant")
     })
   }
   useEffect(()=>{
@@ -82,7 +90,7 @@ function Index({type}) {
   },[imgStr])
   return (
     <section className='form-container'>
-      
+      <ToastContainer />
        <form onSubmit={handleSubmit}>
        <h3 style={{justifySelf:"center"}} >Update Restaurant</h3>
       <div>
@@ -92,7 +100,7 @@ function Index({type}) {
       <div>
         <label htmlFor="image">Restaurant Photo</label>
         { imgStr.length>0?(<div >
-          <img src={"data:image/png;base64,"+imgStr} alt="restaurant-preview" />
+          <img src={imgStr} alt="restaurant-preview" />
         </div>):null
         }
         <input type="file"  id="image" onChange={e=>handleImageChange(e)} accept='.png'/>
