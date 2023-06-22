@@ -81,13 +81,10 @@ function Index({type}) {
       navigate("/")
   
     }).catch(err=>{
-      console.error(err)
       toast.error("Failed to update restaurant")
     })
   }
-  useEffect(()=>{
-    console.log(imgStr)
-  },[imgStr])
+
   return (
     <section className='form-container'>
       <ToastContainer />

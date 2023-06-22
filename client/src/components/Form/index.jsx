@@ -14,10 +14,8 @@ function Index({type}) {
   const navigate = useNavigate()
   async function handleSubmit(e){
     e.preventDefault()
-    console.log(type)
     await axios.post(`http://localhost:4000/users/${type}`,{FullName:userName,Email:userEmail,Password:userPassword}).then(res=>{
       const token = res.data?.token;
-      console.log(token)
       localStorage.setItem("token",token)
       setUserName("")
       setUserEmail("")

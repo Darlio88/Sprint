@@ -20,8 +20,7 @@ function Index() {
 
   useEffect(()=>{
     async function getRestaurant(){
-      await axios.get(`http://localhost:4000/restaurants/${id}`).then(res=>{
-      console.log(res.data)  
+      await axios.get(`http://localhost:4000/restaurants/${id}`).then(res=>{ 
       setRestaurantInfo(res.data);
       })
     }
@@ -29,7 +28,6 @@ function Index() {
   },[id])
  async function handleDelete(){
    await axios.delete(`http://localhost:4000/restaurants/${id}`).then(res=>{
-    console.log(res.data)
     navigate("/")
    }) 
   }
@@ -56,7 +54,7 @@ function Index() {
                 <div className="card-bottom">
                     <button>Book Now</button>
                     <div>
-                  <p>{restaurantInfo?.Cuisine}{" "}cuisine</p>
+                  <p style={{fontSize:"14px"}}>{restaurantInfo?.Cuisine}{" "}</p>
                 </div>
                 </div>
             </div>

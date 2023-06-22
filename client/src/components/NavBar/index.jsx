@@ -15,7 +15,6 @@ function Index() {
   const token = localStorage.getItem("token")
   const [isLogin, setIsLogin]= useState(false)
 
-  console.log(token)
 
   useEffect(()=>{
    if(token){

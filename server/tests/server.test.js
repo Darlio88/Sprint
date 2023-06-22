@@ -12,6 +12,7 @@ const app = require("../server")
 const decodeToken = require("../utils/jwtDecoder")
 
 let userId;
+let restaurantId;
 const PORT = process.env.PORT || 8888;
 
 //before starting the tests
@@ -71,15 +72,30 @@ afterAll( async ()=>{
           console.log('File exists');
         }  
         const response = await request(app).post('/restaurants/create').field("Name","Fresh Hot").field("Location","Wandegeya").field("CreatedBy",userId).field("AvgPrice",100).field("Cuisine","American").attach("image",filePath);   
-        // expect(response.status).toBe(201);
-        console.log(response)
-        expect(response.body).toEqual("restaurant successfully created");
+        expect(response.status).toBe(201);
       });
     
 
 
       it("new restaurant should exist in the database", async ()=>{
         const newRestaurant= await Restaurant.findOne({Name:"Fresh Hot"})
+        restaurantId= newRestaurant._id;
+        console.log(restaurantId)
         expect(newRestaurant).toBeTruthy()
       })
+
+      it('should delete the new restaurant', async () => {
+      const response = await request(app).delete(`/restaurants/${restaurantId}`)
+        expect(response.status).toBe(200);
+      });
+
+
+      it("deleted restaurant should not exist in the database", async ()=>{
+        const newRestaurant= await Restaurant.findOne({Name:"Fresh Hot"})
+        console.log(newRestaurant)
+        expect(newRestaurant).toBe(null)
+      })
 })
+
+
+

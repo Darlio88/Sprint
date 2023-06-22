@@ -24,19 +24,19 @@ function Index({type}) {
 
   function handleImageChange(e){
      
-     setImage( e.target.files[0])
+     setImage(()=>e.target.files[0])
      const reader = new FileReader()
-     reader.readAsDataURL(image)
+     reader.readAsDataURL(e.target.files[0])
      reader.onloadend=()=>{
       const base64Str=reader.result;
-      setImgStr(base64Str)
+      setImgStr(()=>base64Str)
     }      
   }
   async function handleSubmit(e){
     e.preventDefault()
     const token = localStorage.getItem("token")
     if(!token){
-      alert("Please login to create a restaurant")
+      toast.error("Please login to create a restaurant")
       return;
     }
     const decoded=jwtDecode(token)
@@ -57,7 +57,6 @@ function Index({type}) {
     form.append("Cuisine",cuisine);
     form.append("image",image)
     await axios.post("http://localhost:4000/restaurants/create",form).then(res=>{
-      console.log(res.data)
       setCost(10)
       setName("")
       setCuisine("")
@@ -65,7 +64,6 @@ function Index({type}) {
       setImage(null)
       toast.success("Restaurant Successfully added")
     }).catch(err=>{
-      console.error(err)
       toast.error("Failed to create restaurant")
     })
   }
